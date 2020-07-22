@@ -10,7 +10,7 @@ class Wechat {
     const code = init.getQuery('code')
 
     if (code === undefined) {
-      return device ? wap() : web()
+      return device ? this.wap() : this.web()
     }
 
     const data = {

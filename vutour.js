@@ -1,9 +1,7 @@
 import account from './account.js'
-import convert from './convert.js'
+import download from './download.js'
 import init from './init.js'
 import request from './request.js'
-import seek from './seek.js'
-import sse from './sse.js'
 import time from './time.js'
 import tool from './tool.js'
 import upload from './upload.js'
@@ -13,11 +11,9 @@ import wechat from './wechat.js'
 
 const vutour = {
   account: account,
-  convert: convert,
+  download: download,
   init: init,
   request: request,
-  seek: seek,
-  sse: sse,
   time: time,
   tool: tool,
   upload: upload,
