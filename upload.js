@@ -8,13 +8,13 @@ class Upload {
   // handle
   async handle(data) {
     try {
-      const response = await this.requests(data);
+      const response = await this.request(data);
       const result = await response.json();
       tool.loader(false);
-      if (data.show === undefined && result.MsgCode !== 'OK') {
-        tool.prompt(result.MsgCode);
+      if (data.show === undefined && result.code !== undefined) {
+        tool.prompt(result.error)
       }
-      return result.Content;
+      return result.result
     } catch (e) {
       tool.loader(false);
       tool.prompt(e);
@@ -22,29 +22,29 @@ class Upload {
   }
 
   // request
-  requests(data) {
-    data = this.requestHost(data);
-    data = this.requestData(data);
-    tool.loader(true);
-    return fetch(data.url, data);
+  request(data) {
+    data.url = this.getURL(data)
+    data.body = this.getBody(data)
+    tool.loader(true)
+    return fetch(data.url, data)
   }
 
-  // requestHost
-  requestHost(data) {
-    let host = init.getOrigin();
+  // getURL
+  getURL(data) {
+    let host = data.host ? data.host : init.getOrigin();
     if (process.env.NODE_ENV !== 'production') {
-      host = init.getOrigin();
+      host = 'your host name'
     }
-    data.url = host + data.url;
-    return data;
+    return host + data.url
   }
 
-  // requestData
-  requestData(data) {
-    const formData = new FormData();
-    formData.append('file', data.body);
-    data.body = formData;
-    return data;
+  // getBody
+  getBody(data) {
+    const form = new FormData();
+    form.append("file", data.body.file);
+    form.append("path", data.body.path);
+    form.append("prefix", data.body.prefix);
+    return form;
   }
 }
 

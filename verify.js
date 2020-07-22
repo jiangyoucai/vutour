@@ -53,7 +53,7 @@ class Verify {
   // url
   url(data) {
     const reg =
-        /https?:\/\/[a-z0-9_.:]+\/[-a-z0-9_:@&?=+,.!/~*%$]*(\.(html|htm|shtml))?/;
+      /https?:\/\/[a-z0-9_.:]+\/[-a-z0-9_:@&?=+,.!/~*%$]*(\.(html|htm|shtml))?/;
     if (!reg.test(data)) {
       tool.prompt('链接有误');
       return false;
@@ -73,7 +73,7 @@ class Verify {
   // card
   card(data) {
     const reg =
-        /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|x|X)$/;
+      /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|x|X)$/;
     if (!reg.test(data)) {
       tool.prompt('身份证有误');
       return false;

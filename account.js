@@ -4,27 +4,28 @@ import init from './init.js'
 import wechat from './wechat.js'
 
 class Account {
-  // 检查
+  // check account
   check() {
     const account = this.get();
     if (account !== undefined) {
       return account;
     }
+
     const device = init.checkDevice();
     if (!device) {
-      window.location.href = '/login?path=' + init.getPath();
+      window.location.href = '/account/signin?path=' + init.getPath();
       return;
     }
-    // 微信登录
     return wechat.signin();
   }
 
-  // 读出
+  // get account
   get() {
     let account = store.state.account;
     if (account.token !== undefined) {
       return account;
     }
+
     account = this.LocalStorageX.get('account');
     if (account !== undefined) {
       store.commit('signin', account);
@@ -33,32 +34,35 @@ class Account {
     return;
   }
 
-  // 写入
+  // set account
   set(data) {
     store.commit('signin', data);
     this.LocalStorageX.set('account', data, 7 * 24 * 3600 * 1000);
   }
 
-  // 删除
+  // delete account
   del() {
     store.commit('signout');
     LocalStorage.remove('account');
   }
 
-  // 超时
   LocalStorageX = {
-    set: function(key, val, exp) {
-      LocalStorage.set(key, {val: val, exp: exp, time: new Date().getTime()});
+    set: function (key, val, exp) {
+      LocalStorage.set(key,
+        {
+          val: val,
+          exp: exp,
+          time: new Date().getTime(),
+        }
+      );
     },
-    get: function(key) {
+    get: function (key) {
       const info = LocalStorage.get(key);
-      if (!info) {
-        return;
+      const now = new Date().getTime();
+      if (info.time + info.exp < now) {
+        return info.val;
       }
-      if (new Date().getTime() - info.time > info.exp) {
-        return;
-      }
-      return info.val;
+      return;
     }
   }
 }

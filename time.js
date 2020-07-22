@@ -30,5 +30,6 @@ class Time {
     return data < 10 ? '0' + data : data;
   }
 }
+
 const time = new Time();
 export default time

@@ -1,52 +1,62 @@
-import account from './account.js'
 import init from './init.js'
+import account from './account.js'
 import request from './request.js'
 
 class Wechat {
   // signin
   signin() {
-    const device = init.checkDevice();
-    const mobile = init.checkMobile();
-    const code = init.getQuery('code');
-    // 微信登录
-    if (code !== undefined) {
-      const data = {
-        url: 'api url path',
-        login: false,
-        method: 'post',
-        body: {code: code, platform: device ? '0' : '1'}
-      };
-      request.handle(data).then(function(result) {
-        if (result !== undefined) {
-          account.set(result);
-          window.location.href = mobile ? '/user' : '/manage/news';
-        }
-      });
-      return;
+    const device = init.checkDevice()
+    const mobile = init.checkMobile()
+    const code = init.getQuery('code')
+
+    if (code === undefined) {
+      return device ? wap() : web()
     }
-    // 微信授权
-    return device ? this.h5() : this.pc();
+
+    const data = {
+      url: '/v4/account/signin/wechat',
+      login: false,
+      method: 'post',
+      body: {
+        code: code,
+        channel: mobile ? 'your appid' : 'your appid',
+        number: account.get() ? account.get().number : 0
+      }
+    }
+    request.handle(data).then(function (result) {
+      if (result !== undefined) {
+        account.set(result)
+        const path = mobile ? '/user' : '/'
+        window.location.href = path
+      }
+    })
+    return;
   }
 
-  // pc
-  pc() {
-    let appid = 'set your web appid';
-    window.location.href = 'https://open.weixin.qq.com/connect/qrconnect?' +
-        'appid=' + appid + '&redirect_uri=' + init.getURL() +
-        '&response_type=code' +
-        '&scope=snsapi_login' +
-        '&state=STATE#wechat_redirect';
+  // wap
+  wap() {
+    const appid = 'your appid'
+    const path = 'https://open.weixin.qq.com/connect/oauth2/authorize?' +
+      'appid=' + appid +
+      '&redirect_uri=' + init.getURL() +
+      '&response_type=code' +
+      '&scope=snsapi_userinfo' +
+      '&state=STATE#wechat_redirect'
+    return window.location.href = path;
   }
 
-  // h5
-  h5() {
-    let appid = 'set your wap appid';
-    window.location.href =
-        'https://open.weixin.qq.com/connect/oauth2/authorize?' +
-        'appid=' + appid + '&redirect_uri=' + init.getURL() +
-        '&response_type=code' +
-        '&scope=snsapi_userinfo' +
-        '&state=STATE#wechat_redirect';
+  // web
+  web() {
+    const appid = 'your appid'
+    const path = 'https://open.weixin.qq.com/connect/qrconnect?' +
+      'appid=' + appid +
+      '&redirect_uri=' + init.getURL() +
+      '&response_type=code' +
+      '&scope=snsapi_login' +
+      '&style=white' +
+      '&href=https://www.tiantour.com/wechat.css' +
+      '&state=STATE#wechat_redirect'
+    return window.location.href = path;
   }
 }
 

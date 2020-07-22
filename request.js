@@ -8,58 +8,55 @@ class Request {
   // handle
   async handle(data) {
     try {
-      const response = await this.requests(data);
-      const result = await response.json();
-      tool.loader(false);
+      const response = await this.request(data)
+      const result = await response.json()
+      tool.loader(false)
       if (data.show === undefined && result.code !== undefined) {
-        tool.prompt(result.error);
+        tool.prompt(result.error)
       }
-      return result.result;
+      return result.result
     } catch (e) {
-      tool.loader(false);
-      tool.prompt(e);
+      tool.loader(false)
+      tool.prompt(e)
     }
   }
 
-  // requests
-  requests(data) {
-    data = this.requestHost(data);
-    data = this.requestAuth(data);
-    data = this.requestData(data);
-    tool.loader(true);
-    return fetch(data.url, data);
+  // request
+  request(data) {
+    data.url = this.getURL(data)
+    data.headers = this.getHeaders(data)
+    data.body = this.getBody(data)
+    tool.loader(true)
+    return fetch(data.url, data)
   }
 
-  // requestHost
-  requestHost(data) {
-    let host = init.getOrigin();
-    // host = "http://lab.heone.cn"
-    data.url = host + data.url;
-    return data;
+  // getURL
+  getURL(data) {
+    let host = data.host ? data.host : init.getOrigin();
+    if (process.env.NODE_ENV !== 'production') {
+      host = 'your host name'
+    }
+    return host + data.url
   }
 
-  // requestAuth
-  requestAuth(data) {
-    data.headers = {
+  // getHeaders
+  getHeaders(data) {
+    let headers = {
       'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=UTF-8'
-    };
-    if (data.login === true) {
-      const user = account.check();
-      // if (data.bind === undefined && user.permission === undefined) {
-      //   window.location.href = '/account/bind';
-      // }
-      data.headers.Authorization = 'Bearer ' + user.token;
+      'Content-Type': 'application/json'
     }
-    return data;
+    if (data.login === true) {
+      const user = account.check()
+      headers.Authorization = 'Bearer ' + user.token
+    }
+    return headers
   }
 
-  // requestData
-  requestData(data) {
-    data.body = JSON.stringify(data.body);
-    return data;
+  // getBody
+  getBody(data) {
+    return JSON.stringify(data.body)
   }
 }
 
 const request = new Request();
-export default request
+export default request;

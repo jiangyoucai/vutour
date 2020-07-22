@@ -8,7 +8,7 @@ class Value {
 
   // set
   set(key, value) {
-    LocalStorage.set(key, value, 86400);
+    LocalStorage.set(key, value, 24 * 60 * 60 * 1000);
   }
 
   // del

@@ -24,8 +24,8 @@ const vutour = {
   value: value,
   verify: verify,
   wechat: wechat
-};
+}
 vutour.install = function (Vue) {
   Vue.prototype.$vutour = vutour
-};
+}
 export default vutour
