@@ -8,6 +8,7 @@ class Download {
     async handle(data) {
         try {
             const response = await this.request(data);
+            console.log
             const result = await response.json();
             tool.loader(false);
             return result;
@@ -19,8 +20,8 @@ class Download {
 
     // request
     request(data) {
-        data = this.getURL(data);
-        data = this.getBody(data);
+        data.url = this.getURL(data);
+        data.body = this.getBody(data);
         tool.loader(true);
         return fetch(data.url, data);
     }

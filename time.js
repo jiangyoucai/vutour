@@ -25,6 +25,16 @@ class Time {
     return year + '-' + this.completion(month) + '-' + this.completion(1);
   }
 
+  // diff
+  diff(index) {
+    let next = now;
+    next.setDate(next.getDate() + index);
+    const year = next.getFullYear();
+    const month = next.getMonth() + 1;
+    const day = next.getDate();
+    return year + '-' + this.completion(month) + '-' + this.completion(day);
+  }
+
   // completion
   completion(data) {
     return data < 10 ? '0' + data : data;
