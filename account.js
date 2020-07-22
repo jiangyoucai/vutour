@@ -13,7 +13,7 @@ class Account {
 
     const device = init.checkDevice();
     if (!device) {
-      window.location.href = '/login?path=' + init.getPath();
+      window.location.href = '/account/signin?path=' + init.getPath();
       return;
     }
     return wechat.signin();
