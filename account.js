@@ -13,7 +13,7 @@ class Account {
 
     const device = init.checkDevice();
     if (!device) {
-      window.location.href = '/account/signin?path=' + init.getPath();
+      window.location.href = '/login?path=' + init.getPath();
       return;
     }
     return wechat.signin();
@@ -48,18 +48,16 @@ class Account {
 
   LocalStorageX = {
     set: function (key, val, exp) {
-      LocalStorage.set(key,
-        {
-          val: val,
-          exp: exp,
-          time: new Date().getTime(),
-        }
-      );
+      LocalStorage.set(key, {
+        val: val,
+        exp: exp,
+        time: new Date().getTime(),
+      });
     },
     get: function (key) {
       const info = LocalStorage.get(key);
       const now = new Date().getTime();
-      if (info.time + info.exp < now) {
+      if (info.time + info.exp > now) {
         return info.val;
       }
       return;
