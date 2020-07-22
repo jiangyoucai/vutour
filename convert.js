@@ -1,4 +1,5 @@
 class Convert {
+    // Dig2Dec
     Dig2Dec(s) {
         var retV = 0;
         if (s.length == 4) {
@@ -9,6 +10,8 @@ class Convert {
         }
         return -1;
     }
+
+    // Hex2Utf8
     Hex2Utf8(s) {
         var retS = "";
         var tempS = "";
@@ -29,6 +32,7 @@ class Convert {
         return "";
     }
 
+    // Dec2Dig
     Dec2Dig(n1) {
         var s = "";
         var n2 = 0;
@@ -44,6 +48,7 @@ class Convert {
         return s;
     }
 
+    // Str2Hex
     Str2Hex(s) {
         var c = "";
         var n;
@@ -56,6 +61,8 @@ class Convert {
         }
         return digS;
     }
+
+    // GB2312ToUTF8
     GB2312ToUTF8(s1) {
         var s = escape(s1);
         var sa = s.split("%");
@@ -80,6 +87,7 @@ class Convert {
         }
         return retV;
     }
+    // UTF8ToGB2312
     UTF8ToGB2312(str1) {
         var substr = "";
         var a = "";
@@ -127,5 +135,6 @@ class Convert {
         return substr + str1;
     }
 }
+
 const convert = new Convert();
 export default convert

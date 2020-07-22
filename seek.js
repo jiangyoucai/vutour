@@ -8,7 +8,7 @@ class Request {
   // handle
   async handle(data) {
     try {
-      const response = await this.requests(data);
+      const response = await this.request(data);
       let result = await response.json()
       tool.loader(false);
       if (data.show === undefined && result.qry !== "ok") {
@@ -21,48 +21,45 @@ class Request {
     }
   }
 
-  // requests
-  requests(data) {
-    data = this.requestHost(data);
-    data = this.requestAuth(data);
-    data = this.requestData(data);
+  // request
+  request(data) {
+    data.url = this.getURL(data);
+    data.headers = this.getHeaders(data);
+    data.body = this.getBody(data);
     tool.loader(true);
     return fetch(data.url, data);
   }
 
-  // requestHost
-  requestHost(data) {
-    let host = init.getOrigin();
-    // host = "http://zz.heone.cn" 
-    data.url = host + data.url;
-    return data;
+  // getURL
+  getURL(data) {
+    let host = data.host ? data.host : init.getOrigin();
+    if (process.env.NODE_ENV !== 'production') {
+      host = 'your host name'
+    }
+    return host + data.url;
   }
 
-  // requestAuth
-  requestAuth(data) {
-    data.headers = {
+  // getHeaders
+  getHeaders(data) {
+    let headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     };
     if (data.login === true) {
       const user = account.check();
-      // if (data.bind === undefined && user.permission === undefined) {
-      //   window.location.href = '/account/bind';
-      // }
-      data.headers.Authorization = 'Bearer ' + user.token;
+      headers.Authorization = 'Bearer ' + user.token;
     }
-    return data;
+    return headers;
   }
 
   // requestData
-  requestData(data) {
+  getBody(data) {
     let body = [];
     for (const key in data.body) {
       let value = data.body[key];
       body.push(key + "=" + value);
     }
-    data.body = body.join('&');
-    return data;
+    return body.join('&');;
   }
 }
 

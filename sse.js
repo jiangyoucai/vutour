@@ -21,21 +21,21 @@ class Sse {
   // sse
   sse(data) {
     tool.loader(true);
-    data = this.sseHost(data);
+    data.url = this.getURL(data);
     const source = new EventSource(data.url);
-    return new Promise(function(resolve, reject) {
-      source.addEventListener('error', function(e) {
+    return new Promise(function (resolve, reject) {
+      source.addEventListener('error', function (e) {
         reject(e.data)
       }, false);
-      source.addEventListener(data.channel, function(e) {
+      source.addEventListener(data.channel, function (e) {
         resolve(e.data)
         source.close()
       }, false);
     })
   }
 
-  // sseHost
-  sseHost(data) {
+  // getURL
+  getURL(data) {
     let host = init.getOrigin();
     if (process.env.NODE_ENV !== 'production') {
       host = init.getOrigin();
